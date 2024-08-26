@@ -1,0 +1,31 @@
+﻿@page "/intervals"
+@using Microsoft.CodeAnalysis.Elfie.Diagnostics
+@using Shared.Models
+@inject HttpClient Http
+@using Microsoft.Extensions.Logging;
+@using NuGet.Protocol
+
+@functions{
+    Logger logger = new Logger();
+    private int total;
+    List<IntervalDTO> intervals = new List<IntervalDTO>();
+    protected async Task OnInitializedAsync()
+    {
+        var intervalArray = await Http.GetFromJsonAsync<IntervalDTO[]>
+            ("https://localhost:44337/api/Interval");
+        intervals = intervalArray?.ToList() ?? new List<IntervalDTO>();
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head></head>
+<title>Intervals - Client</title>
+<body>
+<h1>Intervals</h1>
+<article class="px-4">
+    Interval - Server
+</article>
+</body>
+</html>

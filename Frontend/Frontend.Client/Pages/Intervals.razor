@@ -1,0 +1,53 @@
+﻿@page "/intervals"
+@using System.Text.Json
+@using Microsoft.CodeAnalysis.Elfie.Diagnostics
+@using Shared.Models
+@inject HttpClient Http
+@using Microsoft.Extensions.Logging;
+@using NuGet.Protocol
+@code {
+
+private int total;
+List<IntervalDTO> intervals = new List<IntervalDTO>();
+protected override void OnAfterRender(bool firstRender)
+{
+    base.OnAfterRender(firstRender);
+    if (firstRender)
+    {
+        Console.WriteLine("First render getting intervals");
+        getIntervals();
+    }
+}
+protected async Task OnInitializedAsync()
+{
+    await getIntervals();
+}
+async public Task<List<IntervalDTO>> getIntervals()
+    {
+        var intervalArray = await Http.GetFromJsonAsync<IntervalDTO[]>
+            ("https://localhost:44337/api/Interval");
+        intervals = intervalArray?.ToList() ?? new List<IntervalDTO>();
+        Console.WriteLine("Got " + intervals.Count + " intervals");
+        return intervals;
+    }
+}
+<!DOCTYPE html>
+
+<html>
+<head></head>
+<title>Intervals</title>
+<body>
+<h1>Intervals - Client</h1>
+<article class="px-4">
+    <b>Count</b>@intervals.Count
+    <pre>
+    @(JsonSerializer.Serialize(intervals, new JsonSerializerOptions() { WriteIndented = true }))
+</pre>
+    @foreach (var interval in intervals)
+    {
+        <b>@interval.intervalName</b>
+    }
+    <button @onclick="getIntervals">Get Intervals</button>
+</article>
+</body>
+</html>
