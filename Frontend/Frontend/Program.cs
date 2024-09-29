@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 var url = builder.Configuration["BackendUrl"];
 builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44337/api/") });
 // Add services to the container.
+builder.Services.AddHttpClient();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();

@@ -31,4 +31,13 @@
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Pages\" />
+      <Folder Include="ServicesBak\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="pages\Intervals.cshtml" />
+    </ItemGroup>
+
 </Project>

@@ -2,50 +2,65 @@
 
 namespace Backend.Services;
 using Shared.Models;
-using Backend;
+using Backend.Data;
+
+public interface IIntervalService
+{
+    public List<Interval> GetIntervals();
+    public Task<IntervalDTO> findIntervalByID(int id);
+    public void UpdateInterval(IntervalDTO intervalDTO);
+    public List<IntervalDTO> getIntervalsByType(String type);
+
+}
 public class IntervalService : IIntervalService{
-    private AppDBContext context;
-    private IMapper mapper;
+    private AppDBContext _context;
+    private IMapper _mapper;
+    private ILogger<IntervalService> _logger;
     
-    public IntervalService(AppDBContext context)
+    public IntervalService(AppDBContext context,ILogger<IntervalService> logger)
     {
-        this.context = context;
+        this._context = context;
+        this._logger = logger;
     }
     
-    public List<IntervalDTO> GetIntervals()
+    public  List<Interval> GetIntervals()
     {
-        var intervals = context.Intervals.ToList();
-        var intervalDTOs = mapper.Map<List<IntervalDTO>>(intervals);
-        return intervalDTOs;
+        var intervals =  _context.Intervals.ToList();
+        if (intervals ==  null)
+        {
+            return new List<Interval>();
+        }
+        //var intervalDTOs = _mapper.Map<List<IntervalDTO>>(intervals);
+        return intervals;
     }
-    public IntervalDTO findIntervalByID(int id)
+    public async Task<IntervalDTO> findIntervalByID(int id)
     {
-        var interval = context.Intervals.Find(id);
-        var intervalDTO = mapper.Map<IntervalDTO>(interval);
+        var interval = _context.Intervals.Find(id);
+        var intervalDTO = _mapper.Map<IntervalDTO>(interval);
         return intervalDTO;
     }
     public void AddInterval(IntervalDTO intervalDTO)
     {
-        var interval = mapper.Map<Interval>(intervalDTO);
-        context.Intervals.Add(interval);
-        context.SaveChanges();
+        var interval = _mapper.Map<Interval>(intervalDTO);
+        _context.Intervals.Add(interval);
+        _context.SaveChanges();
     }
     public void UpdateInterval(IntervalDTO intervalDTO)
     {
-        var interval = mapper.Map<Interval>(intervalDTO);
-        context.Intervals.Update(interval);
-        context.SaveChanges();
+        var interval = _mapper.Map<Interval>(intervalDTO);
+        _context.Intervals.Update(interval);
+        _context.SaveChanges();
     }
     public void DeleteInterval(int id)
     {
-        var interval = context.Intervals.Find(id);
-        context.Intervals.Remove(interval);
-        context.SaveChanges();
+        var interval = _context.Intervals.Find(id);
+        _context.Intervals.Remove(interval);
+        _context.SaveChanges();
     }
     public List<IntervalDTO> getIntervalsByType(String type)
     {
-        var intervals = context.Intervals.Where(i => i.type == type).ToList();
-        var intervalDTOs = mapper.Map<List<IntervalDTO>>(intervals);
+        var intervals = _context.Intervals.Where(i => i.RecordType == type).ToList();
+        var intervalDTOs = _mapper.Map<List<IntervalDTO>>(intervals);
         return intervalDTOs;
     }
     

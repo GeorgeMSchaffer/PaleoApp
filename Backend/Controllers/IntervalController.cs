@@ -5,47 +5,48 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Backend;
 using Shared.Models;
-using AutoMapper;
 using Backend.Services;
-using Shared.Utils;
+using Backend.Data;
 namespace Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]s")]
     [ApiController]
     public class IntervalController : ControllerBase
     {
+        //private readonly ILogger _logger;
         private readonly AppDBContext _context;
         private readonly IntervalService _service;
-        private readonly IMapper _mapper = MapperConfig.InitializeAutomapper();
+        //private readonly IMapper _mapper = MapperConfig.InitializeAutomapper();
         public IntervalController(AppDBContext context,IntervalService service)
         {
             _context = context;
             _service = service;
+           // _logger = logger;
         }
 
-        // GET: api/Interval
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<IntervalDTO>>> GetIntervals()
+        [HttpGet("/")]
+        public async Task<ActionResult<List<IntervalDTO>>> GetIntervals()
         {
-            var intervals = await _context.Intervals.ToListAsync();
-            var intervalDTOs = _mapper.Map<List<IntervalDTO>>(intervals);
-            return intervalDTOs;
+            var intervalDTOs =  _service.GetIntervals();
+            if(intervalDTOs == null)
+            {
+                return NotFound();
+            }
+   
+            return Ok(intervalDTOs);
         }
 
         // GET: api/Interval/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IntervalDTO>> GetInterval(int id)
         {
-            var interval = await _context.Intervals.FindAsync(id);
+            var intervalDTO = await _service.findIntervalByID(id);
 
-            if (interval == null)
+            if (intervalDTO == null)
             {
                 return NotFound();
             }
-            var intervalDTO = _mapper.Map<IntervalDTO>(interval);
-
             return intervalDTO;
         }
 
@@ -54,7 +55,7 @@ namespace Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutInterval(int id, Interval interval)
         {
-            if (id != interval.id)
+            if (id != interval.IntervalNo)
             {
                 return BadRequest();
             }
@@ -88,7 +89,7 @@ namespace Backend.Controllers
             _context.Intervals.Add(interval);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetInterval", new { id = interval.id }, interval);
+            return CreatedAtAction("GetInterval", new { id = interval.IntervalNo }, interval);
         }
 
         // DELETE: api/Interval/5
@@ -109,7 +110,7 @@ namespace Backend.Controllers
 
         private bool IntervalExists(int id)
         {
-            return _context.Intervals.Any(e => e.id == id);
+            return _context.Intervals.Any(e => e.IntervalNo == id);
         }
         [HttpGet("/eras/")]
         public async Task<IActionResult> getEras()

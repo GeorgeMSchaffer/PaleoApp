@@ -6,103 +6,88 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend;
+using Backend.Services;
 using Shared.Models;
 
 namespace Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
-    public class OccuranceController : ControllerBase
+    public class OccurrencesController : ControllerBase
     {
-        private readonly AppDBContext _context;
+        private readonly OccurrenceService _occurrenceService;
 
-        public OccuranceController(AppDBContext context)
+        public OccurrencesController(OccurrenceService occurrenceService)
         {
-            _context = context;
+            _occurrenceService = occurrenceService;
         }
 
-        // GET: api/Occurance
+        // GET: api/Occurrences
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Occurance>>> GetOccurances()
+        public async Task<ActionResult<IEnumerable<OccurrenceDTO>>> GetOccurrences()
         {
-            return await _context.Occurances.ToListAsync();
+            return Ok(await _occurrenceService.GetAll());
         }
 
-        // GET: api/Occurance/5
+        // GET: api/Occurrences/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Occurance>> GetOccurance(int id)
+        public async Task<ActionResult<OccurrenceDTO>> GetOccurrence(int id)
         {
-            var occurance = await _context.Occurances.FindAsync(id);
+            var occurrence = await _occurrenceService.Get(id);
 
-            if (occurance == null)
+            if (occurrence == null)
             {
                 return NotFound();
             }
 
-            return occurance;
+            return Ok(occurrence);
+        }
+        
+        
+        [HttpGet("interval/{intervalName}")]
+        public async Task<ActionResult<List<Occurrence>>> GetOccurrencesByIntervalName(String intervalName) {
+            if (intervalName == null || intervalName.Length == 0)
+            {
+                return BadRequest("Interval name is required");
+            }
+            
+            var occurrences =  await _occurrenceService.GetOccurrencesByIntervalName(intervalName);
+            return Ok(occurrences);
         }
 
-        // PUT: api/Occurance/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Occurrences/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOccurance(int id, Occurance occurance)
+        public async Task<IActionResult> PutOccurrence(int id, OccurrenceDTO occurrenceDTO)
         {
-            if (id != occurance.id)
+            if (id != occurrenceDTO.OccurrenceNo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(occurance).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OccuranceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _occurrenceService.Update(occurrenceDTO);
 
             return NoContent();
         }
 
-        // POST: api/Occurance
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Occurrences
         [HttpPost]
-        public async Task<ActionResult<Occurance>> PostOccurance(Occurance occurance)
+        public async Task<ActionResult<OccurrenceDTO>> PostOccurrence(OccurrenceDTO occurrenceDTO)
         {
-            _context.Occurances.Add(occurance);
-            await _context.SaveChangesAsync();
+            var createdOccurrence = await _occurrenceService.Add(occurrenceDTO);
 
-            return CreatedAtAction("GetOccurance", new { id = occurance.id }, occurance);
+            return CreatedAtAction("GetOccurrence", new { id = createdOccurrence.OccurrenceNo }, createdOccurrence);
         }
 
-        // DELETE: api/Occurance/5
+        // DELETE: api/Occurrences/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOccurance(int id)
+        public async Task<IActionResult> DeleteOccurrence(int id)
         {
-            var occurance = await _context.Occurances.FindAsync(id);
-            if (occurance == null)
-            {
-                return NotFound();
-            }
+            var result = await _occurrenceService.Delete(id);
 
-            _context.Occurances.Remove(occurance);
-            await _context.SaveChangesAsync();
+            if (!result)
+                return NotFound();
 
             return NoContent();
-        }
-
-        private bool OccuranceExists(int id)
-        {
-            return _context.Occurances.Any(e => e.id == id);
         }
     }
 }

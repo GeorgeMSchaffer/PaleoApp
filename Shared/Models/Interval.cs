@@ -1,36 +1,52 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Shared.Models;
-
-[Table("intervals")]
-public class Interval
+namespace Shared.Models
 {
-    [Key]
-    [Column(name:"interval_no")]
-    public int id { get; set; }
-    
-    [Column(name:"record_type")]
-    public String? recordType { get; set; }
+    [Table("intervals", Schema = "paleo")]
+    public class Interval
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("interval_no")]
+        public int IntervalNo { get; set; }
 
-    [Column(name:"interval_name")]
-    public String? intervalName { get; set; }
-    
-    public String? abbrev { get; set; }
-    public String? type { get; set; }
-    
-    [Column(name:"parent_no")]
-    public int? parentNo { get; set; }
-    
-    [Column(name:"color")]
-    public String? color { get; set; }
-    
-    [Column(name:"t_age")]
-    public Decimal? tAge { get; set; }
+        // [ForeignKey("ParentNo")]
+        // public virtual Interval Parent { get; set; }
+        //
+        // [InverseProperty("Parent")]
+        // public virtual ICollection<Interval> Children { get; set; } = new HashSet<Interval>();
 
-    [Column(name:"b_age")]
-    public Decimal? bAge { get; set; }
+        [Column("interval_name"), StringLength(512)]
+        public string? IntervalName { get; set; }
 
-    [Column(name:"reference_no")]
-    public int? referenceNo { get; set; }
+        public List<Occurrence> Occurrences { get; set; }
+        [Column("b_age")]
+        public double? StartMYA { get; set; }
+
+        [Column("t_age")]
+        public double? EndMYA { get; set; }
+
+        [Column("color"), StringLength(255)]
+        public string? Color { get; set; }
+
+        // [Column("parent_no")]
+        // public int? ParentNo { get; set; }
+
+        [Column("record_type"), StringLength(255)]
+        public string? RecordType { get; set; }
+
+        [Column("reference_no")]
+        public int? ReferenceNo { get; set; }
+
+        [Column("scale_no")]
+        public int? ScaleNo { get; set; }
+
+        // public IEnumerator GetEnumerator()
+        // {
+        //     throw new NotImplementedException();
+        // }
+    }
 }

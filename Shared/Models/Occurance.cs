@@ -1,69 +1,96 @@
-﻿namespace Shared.Models;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-[Table("occurances")]
-public class Occurance
-{
-    [Key]
-    [Required]
-    [Column("occurrence_no")]
-    public int id { get; set; }
-    [Column("record_type")]
-    public String? recordType { get; set; }
-    [Column("reid_no")]
-    public int? reidNo { get; set; }
-    [Column("flags")]
-    public String? flags { get; set; }
-    [Column("collection_no")]
-    public int? collectionNo { get; set; }
-    [Column("identified_name")]
-    public String? identifiedName { get; set; }
-    [Column("identified_rank")]
-    public String? identifiedRank { get; set; }
-    [Column("identified_no")]
-    public int? identifiedNo { get; set; }
-    [Column("difference")]
-    public String? difference { get; set; }
-    [Column("accepted_name")]
-    public String? acceptedName { get; set; }
-    [Column("accepted_rank")]
-    public String? acceptedRank { get; set; }
-    [Column(" accepted_no")]
-    public int? acceptedNo { get; set; }
+using Shared.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-    [Column("early_interval")]
-    public String? earlyInterval { get; set; }
-    [Column("late_interval")]
-    public String? lateInterval { get; set; }
-    [Column("max_ma")]
-    public Decimal? maxMYA { get; set; }
-    [Column("min_ma")]
-    public Decimal? minMYA { get; set; }
-    [Column("reference_no")]
-    public int? referenceNo { get; set; }
-    [Column("cc")]
-    public String? cc { get; set; }
-    [Column("state")]
-    public String? state { get; set; }
-    [Column("county")]
-    public String? county { get; set; }
-    [Column("latlng_basis")]
-    public String? latLngBasis { get; set; }
-    [Column("latlng_precision")]
-    public String? latlngPrecision { get; set; }
-    [Column("geogscale")]
-    public String? geoscale { get; set; }
-    [Column("geogcomments")]
-    public String? geoComments { get; set; }
-    [Column("phylum")]
-    public String? phylum { get; set; }
-    [Column("class")]
-    public String? orderClass { get; set; }
-    [Column("class_order")]
-    public String? classOrder { get; set; }
-    [Column("family")]
-    public String? family { get; set; }
-    [Column("genus")]
-    public String? genus { get; set; }
+namespace Shared.Models
+{
+    [Table("occurrences", Schema = "paleo")]
+    public class Occurrence
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("occurrence_no")]
+        public int OccurrenceNo { get; set; }
+
+
+        public IEnumerable<Species>? Species { get; set; }
+
+        [Column("collection_no")] public int? CollectionNo { get; set; }
+
+        [Column("record_type")]
+        [StringLength(255)]
+        public string? RecordType { get; set; }
+
+        [Column("identified_name")]
+        [StringLength(1024)]
+        public string? IdentifiedName { get; set; }
+
+        [Column("identified_rank")]
+        [StringLength(1024)]
+        public string? IdentifiedRank { get; set; }
+
+        [Column("identified_no")] public int? IdentifiedNo { get; set; }
+
+        [Column("accepted_name")]
+        [StringLength(512)]
+
+        public string? AcceptedName { get; set; }
+
+        [Column("accepted_rank")]
+        [StringLength(512)]
+        public string? AcceptedRank { get; set; }
+
+
+        public int? AcceptedNo { get; set; }
+
+        [Column("early_interval")]
+        [StringLength(512)]
+        public string EarlyInterval { get; set; }
+
+        [Column("late_interval")]
+        [StringLength(512)]
+        public string? LateInterval { get; set; }
+        
+        public Interval Interval { get; set; }
+        // public Interval? Interval
+        // {
+        //     get
+        //     {
+        //         return LateInterval ?? EarlyInterval;
+        //     }
+        // }
+
+        [Column("max_ma")] public double? MaxMya { get; set; }
+
+        [Column("min_ma")] public double? MinMya { get; set; }
+
+        [Column("reference_no")] public int? ReferenceNo { get; set; }
+
+        [Column("cc")] [StringLength(1024)] public string? Cc { get; set; }
+
+        [Column("latlng_basis")]
+        [StringLength(512)]
+        public string? LatlngBasis { get; set; }
+
+        [Column("latlng_precision")]
+        [StringLength(512)]
+        public string? LatlngPrecision { get; set; }
+
+        [Column("geogscale")]
+        [StringLength(512)]
+        public string? Geogscale { get; set; }
+
+        [Column("phylum")] [StringLength(512)] public string? Phylum { get; set; }
+
+        [Column("class")] [StringLength(512)] public string? Class { get; set; }
+
+        [Column("order")] [StringLength(512)] public string? Order { get; set; }
+
+        [Column("family")] [StringLength(512)] public string? Family { get; set; }
+
+        [Column("genus")] [StringLength(512)] public string? Genus { get; set; }
+
+    }
 }

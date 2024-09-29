@@ -1,4 +1,6 @@
-﻿namespace Shared.Utils;
+﻿using Shared.Entities;
+
+namespace Shared.Utils;
 using AutoMapper;
 using Shared.Models;
 public class MapperConfig
@@ -10,7 +12,9 @@ public class MapperConfig
         {
             //Configuring Employee and EmployeeDTO
             cfg.CreateMap<Interval, IntervalDTO>();
-            cfg.CreateMap<Occurance, OccuranceDTO>();
+            cfg.CreateMap<Occurrence, OccurrenceDTO>();
+            cfg.CreateMap<Species, SpeciesDTO>();
+            cfg.CreateMap<Taxa, TaxaDTO>();
             //Any Other Mapping Configuration ....
         });
         //Create an Instance of Mapper and return that Instance
