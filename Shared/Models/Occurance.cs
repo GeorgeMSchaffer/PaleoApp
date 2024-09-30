@@ -15,17 +15,18 @@ namespace Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("occurrence_no")]
         [JsonProperty("occurrence_no")]
+        //[ForeignKey("occurrence_no")]
         public int OccurrenceNo { get; set; }
 
 
         //[Column("accepted_no")]
         
-        [ForeignKey("accepted_no")]
+ //       [ForeignKey("accepted_no")]
         [Column("accepted_no")]
         [JsonProperty("accepted_no")]
         public int? AcceptedNo { get; set; }
         
-        [ForeignKey("occurrence_no")]
+
         
         public List<Species>? Species { get; set; }
         //public List<Taxa>? Taxa { get; set; }
@@ -73,22 +74,22 @@ namespace Shared.Models
         [StringLength(512)]
         public string? LateIntervalName { get; set; }
         
-        [ForeignKey("interval_no")]
-        [JsonProperty("interval_no")]
-        public int? intervalNo { get; set; }
-        public Interval? EarlyInterval { get; set; }
-        public Interval? LateInterval { get; set; }
         
-        // public Interval? Interval
-        // {
-        //     get
-        //     {
-        //         return LateInterval ?? EarlyInterval;
-        //     }
-        // }    
-
-      
-
+        [JsonProperty("early_interval_no")]
+        [Column("early_interval_no")]
+        [ForeignKey("Interval")]
+        public int? EarlyIntervalNo { get; set; }
+        public Interval? Interval { get; set; }
+        //public Interval? EarlyInterval { get; set;    }
+        
+        [JsonProperty("late_interval_no")]
+        [Column("late_interval_no")]
+        //[ForeignKey("Interval")]
+        public int? LateIntervalNo { get; set; }
+        
+        //[ForeignKey("EarlyIntervalNo")]
+       //public Interval? interval { get; set; }
+        
         [Column("reference_no")] public int? ReferenceNo { get; set; }
 
         [Column("cc")] [StringLength(1024)] public string? Cc { get; set; }

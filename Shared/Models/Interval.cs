@@ -14,7 +14,7 @@ namespace Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("interval_no")]
         [JsonPropertyName("interval_no")]
-        [JsonProperty("interval_no")]
+        //[ForeignKey("Occurrence")]
         public int IntervalNo { get; set; }
 
         // [ForeignKey("ParentNo")]
@@ -28,24 +28,26 @@ namespace Shared.Models
         [JsonProperty("interval_name")]
         public string? IntervalName { get; set; }
         // [ForeignKey("interval_name")]
+ //       [ForeignKey("EarlyIntervalNo")]
         public List<Occurrence> Occurrences { get; set; }
-        [Column("b_age")]
-        [JsonPropertyName("b_age")]
-        [JsonProperty("b_age")]
-        public double? StartMYA { get; set; }
+        
+        [Column("min_ma")]
+        [JsonPropertyName("min_ma")]
+        public double? MinMya { get; set; }
 
-        [Column("t_age")]
-        [JsonPropertyName("t_age")]
-        [JsonProperty("t_age")]
-        public double? EndMYA { get; set; }
+        [Column("max_ma")]
+        [JsonPropertyName("max_ma")]
+        public double? MaxMya { get; set; }
 
         [Column("color"), StringLength(255)]
         [JsonPropertyName("color")]
         [JsonProperty("color")]
         public string? Color { get; set; }
 
-        // [Column("parent_no")]
-        // public int? ParentNo { get; set; }
+         [Column("parent_no")]
+        public int? ParentNo { get; set; }
+        [ForeignKey("ParentNo")]
+        public Interval Parent { get; set; }
 
         [Column("record_type"), StringLength(255)]
         [JsonPropertyName("record_type")]

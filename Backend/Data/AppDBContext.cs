@@ -42,15 +42,20 @@ public class AppDBContext : DbContext
 //         List<Occurrence> occurrences = _mapper.Map<List<Occurrence>>(occurrencesJSON);
 //        _logger.LogInformation($"Try to insert {occurrences.Count} occurrences");
 //        
-       modelBuilder.Entity<Occurrence>()
-            .HasMany<Species>(navigationExpression: o => o.Species)
-            .WithOne(navigationExpression: s => s.Occurrence)
-            .HasForeignKey(foreignKeyExpression: s => s.AcceptedNo);
+        // modelBuilder.Entity<Occurrence>()
+        //     .HasMany<Species>(navigationExpression: o => o.Species)
+        //     .WithOne(navigationExpression: s => s.Occurrence);
+        //    .HasForeignKey(foreignKeyExpression: s => s.AcceptedNo);
 
-       modelBuilder.Entity<Interval>()
-           .HasMany<Occurrence>(i => i.Occurrences)
-           .WithOne(o => o.EarlyInterval)
-           .HasForeignKey("interval_no");
+        modelBuilder.Entity<Occurrence>()
+            .HasOne(o => o.Interval)
+            .WithMany(i => i.Occurrences)
+            .HasForeignKey(o => o.EarlyIntervalNo);
+
+       // modelBuilder.Entity<Occurrence>()
+       //     .HasOne<Interval>(o => o.EarlyInterval);
+           //.WithOne(o => o.EarlyInterval)
+           //.HasForeignKey("interval_no");
 
      //  modelBuilder.Entity<Interval>().HasMany<Occurrence>().WithOne(o=>o.LateInterval);
 

@@ -106,7 +106,14 @@ public class OccurrenceService : IOccurrenceService
     public async Task<List<OccurrenceDTO>> GetOccurrencesByIntervalName(object intervalName)
     {
         
-        var occurrences = await _context.Occurrences.Where(o => o.EarlyInterval == intervalName || o.LateInterval == intervalName).ToListAsync();
+        var interval = await _context.Intervals.Where(i=>i.IntervalName == intervalName).FirstOrDefaultAsync();
+        if(interval == null)
+        {
+            return new List<OccurrenceDTO>();
+        }
+
+        //[TODO:] We could check if the interval being matched has chidlren intervals then if someone searches for Permian it would include any 
+        var occurrences = await _context.Occurrences.Where(o => o.EarlyIntervalNo == interval.IntervalNo || o.LateIntervalNo == interval.IntervalNo).ToListAsync();
         _logger.LogInformation("Returning Occurrence  " + occurrences.Count + " occurrences");
         var occurrenceDTOtoReturn = _mapper.Map<List<OccurrenceDTO>>(occurrences);
 

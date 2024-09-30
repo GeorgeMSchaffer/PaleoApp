@@ -30,14 +30,16 @@ public class IntervalService : IIntervalService{
             .Where<Interval>(i => i.IntervalName == intervalName)
             .ToListAsync();
         // The interval name was not found so we need to bail out
+       _logger.LogInformation($"Found {intervals.Count()} intervals with name {intervalName}");
         if(intervals.Count == 0)
         {
             return new List<OccurrenceDTO>();
         }
         
-        var occurrences = _context.Occurrences
-                .Where<Occurrence>(o => o.EarlyInterval == intervals.First() || o.LateInterval == intervals.First())
+        var occurrences = await _context.Occurrences
+                .Where<Occurrence>(o => o.EarlyIntervalName == intervals.First().IntervalName)
                 .ToListAsync();
+        _logger.LogInformation($"Found {occurrences.Count()} occurrences for interval name {intervalName}");
         var occurrenceDTOs = _mapper.Map<List<OccurrenceDTO>>(occurrences);
         return occurrenceDTOs;
     }

@@ -17,11 +17,13 @@ namespace Backend.Controllers
         //private readonly ILogger _logger;
         private readonly AppDBContext _context;
         private readonly IntervalService _service;
+        private readonly ILogger<IntervalController> _logger;
         //private readonly IMapper _mapper = MapperConfig.InitializeAutomapper();
-        public IntervalController(AppDBContext context,IntervalService service)
+        public IntervalController(AppDBContext context,IntervalService service,ILogger<IntervalController> logger)
         {
             _context = context;
             _service = service;
+            _logger = logger;
            // _logger = logger;
         }
 
@@ -37,12 +39,13 @@ namespace Backend.Controllers
             return Ok(intervalDTOs);
         }
 
-        [HttpGet("/{intervalName}/occurrences")]
+        [HttpGet("/occurrences/{intervalName}/")]
         
         //[TODO:] Need to join in the interval info into the occurrences returned
         public async Task<List<OccurrenceDTO>> getIntervalOccurrences(String intervalName)
         {
             var intervalDtos = await _service.getOccurrencesByIntervalName(intervalName);
+            
             // if(intervalDTO.Count == 0)
             // {
             //     return NotFound();

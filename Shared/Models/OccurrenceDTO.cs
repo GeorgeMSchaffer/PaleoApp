@@ -18,10 +18,12 @@ public class OccurrenceDTO
     public String? acceptedName { get; set; }
     public String? acceptedRank { get; set; }
     public int? acceptedNo { get; set; }
-    public String? earlyInterval { get; set; }
-    public String? lateInterval { get; set; }
+    public string? EarlyIntervalName { get; set; }
+    public string? LateIntervalName { get; set; }
+    public int? EarlyIntervalNo { get; set; }
+    public int? LateIntervalNo { get; set; }
+    public Double minMya { get; set; }
     public Double maxMYA { get; set; }
-    public Double minMYA { get; set; }
     public int? referenceNo { get; set; }
     public String? cc { get; set; }
     public String? state { get; set; }
