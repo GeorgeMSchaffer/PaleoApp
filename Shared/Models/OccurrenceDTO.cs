@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class OccurrenceDTO
 {
     public int? OccurrenceNo { get; set; }
+    public int intervalNo { get; set; }
     public String? recordType { get; set; }
     public int? reidNo { get; set; }
     public String? flags { get; set; }
@@ -19,8 +20,8 @@ public class OccurrenceDTO
     public int? acceptedNo { get; set; }
     public String? earlyInterval { get; set; }
     public String? lateInterval { get; set; }
-    public Decimal maxMYA { get; set; }
-    public Decimal minMYA { get; set; }
+    public Double maxMYA { get; set; }
+    public Double minMYA { get; set; }
     public int? referenceNo { get; set; }
     public String? cc { get; set; }
     public String? state { get; set; }

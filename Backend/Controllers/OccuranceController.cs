@@ -24,9 +24,10 @@ namespace Backend.Controllers
 
         // GET: api/Occurrences
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OccurrenceDTO>>> GetOccurrences()
+        public async Task<ActionResult<List<OccurrenceDTO>>> GetOccurrences()
         {
-            return Ok(await _occurrenceService.GetAll());
+            var occurrences =  _occurrenceService.GetAll();
+            return occurrences;
         }
 
         // GET: api/Occurrences/5

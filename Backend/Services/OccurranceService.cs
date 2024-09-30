@@ -9,7 +9,7 @@ using Backend.Services;
 
 public interface IOccurrenceService
 {
-    Task<IEnumerable<Occurrence>> GetAll();
+    List<OccurrenceDTO> GetAll();
     Task<OccurrenceDTO> Get(int id);
     Task<OccurrenceDTO> Add(OccurrenceDTO occurrence);
     Task<Occurrence?> Update(OccurrenceDTO occurrence);
@@ -22,21 +22,34 @@ public class OccurrenceService : IOccurrenceService
     private readonly AppDBContext _context;
     private readonly ILogger<OccurrenceService> _logger;
     private readonly IMapper _mapper;
+    private readonly MapperConfiguration config = new MapperConfiguration(cfg =>
+    { 
+        cfg.CreateMap<Occurrence, OccurrenceDTO>();
+        cfg.CreateMap<OccurrenceDTO, Occurrence>();
+    }); 
+
     //private ILogger logger;
-    public OccurrenceService(AppDBContext context,ILogger<OccurrenceService> logger)
+    public OccurrenceService(AppDBContext context,ILogger<OccurrenceService> logger,IMapper _mapper)
     {
-        _context = context;
+        this._context = context;
         this._logger = (ILogger<OccurrenceService>?)logger;
+        this._mapper = _mapper;
     }
 
-    public async Task<IEnumerable<Occurrence>> GetAll()
+    public  List<OccurrenceDTO> GetAll()
     {
-        var occurrences = await _context.Occurrences.ToListAsync();
+            var occurrences =  _context.Occurrences.ToList();
+            _logger.LogInformation("Returning Occurrence  " + occurrences.Count + " occurrences");
         //logger.LogInformation("Returning Occurrence with ID " + occurrences. + " occurrences");
-        //var occurrenceDTOs = _mapper.Map<List<OccurrenceDTO>>(occurrences);
-
-        return occurrences;
+        var mapper = new Mapper(config);
+        
+        var occurrenceDTOs = mapper.Map<List<OccurrenceDTO>>(occurrences);
+        _logger.LogInformation("Returning Occurrence  " + occurrenceDTOs.Count + " occurrence DTOs");
+        var occurrenceJsonDTOs = mapper.Map<List<OccurrenceDTO>>(occurrences);
+        return occurrenceJsonDTOs;
     }
+
+    public object OccurrenceJsonDTO { get; set; }
 
     public async Task<OccurrenceDTO> Get(int id)
     {
@@ -90,10 +103,13 @@ public class OccurrenceService : IOccurrenceService
         return true;
     }
 
-    public async Task<List<Occurrence>> GetOccurrencesByIntervalName(object intervalName)
+    public async Task<List<OccurrenceDTO>> GetOccurrencesByIntervalName(object intervalName)
     {
-        var occurrences = await _context.Occurrences.ToListAsync();
         
-        return occurrences; 
+        var occurrences = await _context.Occurrences.Where(o => o.EarlyInterval == intervalName || o.LateInterval == intervalName).ToListAsync();
+        _logger.LogInformation("Returning Occurrence  " + occurrences.Count + " occurrences");
+        var occurrenceDTOtoReturn = _mapper.Map<List<OccurrenceDTO>>(occurrences);
+
+        return occurrenceDTOtoReturn; 
     }
 }

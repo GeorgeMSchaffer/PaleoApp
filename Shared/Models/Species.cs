@@ -18,18 +18,15 @@ namespace Shared.Entities
         [Column("flags", TypeName = "text")]
         public string Flags { get; set; }
 
-        [Column("occurrence_no", TypeName = "text")]
         [ForeignKey("occurrence_no")]
+        [Column("occurrence_no", TypeName = "text")]
         public string OccurrenceNo { get; set; }
         public Occurrence Occurrence { get; set; }
         
         [Column("reid_no")]
         public int? ReidNo { get; set; }
 
-        [ForeignKey("occurrence_no")]
-        public virtual Occurrence occurrence { get; set; }
-        public virtual Taxa taxa { get; set; }
-        
+
         [Column("collection_no", TypeName = "text")]
         public string CollectionNo { get; set; }
 

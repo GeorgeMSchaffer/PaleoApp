@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Shared.Entities;
 
 namespace Shared.Models
 {
@@ -25,7 +26,8 @@ namespace Shared.Models
 
         [ForeignKey("accepted_no")]
         public int? AcceptedNo { get; set; }
-        public Occurrence? Occurrence { get; set; }
+        //public Occurrence? Occurrence { get; set; }
+        public Species? Species { get; set; }
 
         [Column("accepted_rank")]
         public string? AcceptedRank { get; set; }

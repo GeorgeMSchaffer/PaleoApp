@@ -1,3 +1,4 @@
+using System.Reflection;
 using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IntervalService>();
 builder.Services.AddScoped<OccurrenceService>();
 builder.Services.AddScoped<SpeciesService>();
 builder.Services.AddScoped<TaxaService>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 //builder.Services.AddScoped<ILogger>();
 
 var app = builder.Build();

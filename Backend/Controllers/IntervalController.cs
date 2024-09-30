@@ -37,6 +37,18 @@ namespace Backend.Controllers
             return Ok(intervalDTOs);
         }
 
+        [HttpGet("/{intervalName}/occurrences")]
+        
+        //[TODO:] Need to join in the interval info into the occurrences returned
+        public async Task<List<OccurrenceDTO>> getIntervalOccurrences(String intervalName)
+        {
+            var intervalDtos = await _service.getOccurrencesByIntervalName(intervalName);
+            // if(intervalDTO.Count == 0)
+            // {
+            //     return NotFound();
+            // }
+            return intervalDtos;
+        }
         // GET: api/Interval/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IntervalDTO>> GetInterval(int id)

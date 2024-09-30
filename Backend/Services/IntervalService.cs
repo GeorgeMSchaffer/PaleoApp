@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Data.Entity;
+using AutoMapper;
 
 namespace Backend.Services;
 using Shared.Models;
@@ -6,7 +7,7 @@ using Backend.Data;
 
 public interface IIntervalService
 {
-    public List<Interval> GetIntervals();
+    public Task<List<Interval>> GetIntervals();
     public Task<IntervalDTO> findIntervalByID(int id);
     public void UpdateInterval(IntervalDTO intervalDTO);
     public List<IntervalDTO> getIntervalsByType(String type);
@@ -22,10 +23,27 @@ public class IntervalService : IIntervalService{
         this._context = context;
         this._logger = logger;
     }
-    
-    public  List<Interval> GetIntervals()
+
+    public async Task<List<OccurrenceDTO>> getOccurrencesByIntervalName(string intervalName)
     {
-        var intervals =  _context.Intervals.ToList();
+        var intervals =  await _context.Intervals
+            .Where<Interval>(i => i.IntervalName == intervalName)
+            .ToListAsync();
+        // The interval name was not found so we need to bail out
+        if(intervals.Count == 0)
+        {
+            return new List<OccurrenceDTO>();
+        }
+        
+        var occurrences = _context.Occurrences
+                .Where<Occurrence>(o => o.EarlyInterval == intervals.First() || o.LateInterval == intervals.First())
+                .ToListAsync();
+        var occurrenceDTOs = _mapper.Map<List<OccurrenceDTO>>(occurrences);
+        return occurrenceDTOs;
+    }
+    public async Task<List<Interval>> GetIntervals()
+    {
+        var intervals = await _context.Intervals.ToListAsync();
         if (intervals ==  null)
         {
             return new List<Interval>();
@@ -37,14 +55,19 @@ public class IntervalService : IIntervalService{
     {
         var interval = _context.Intervals.Find(id);
         var intervalDTO = _mapper.Map<IntervalDTO>(interval);
+        //var intervalJsonDTO = _mapper.Map<IntervalJsonDTO>(interval);
+
         return intervalDTO;
     }
-    public void AddInterval(IntervalDTO intervalDTO)
+
+    public async void AddInterval(IntervalDTO intervalDTO)
     {
         var interval = _mapper.Map<Interval>(intervalDTO);
         _context.Intervals.Add(interval);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
+
+
     public void UpdateInterval(IntervalDTO intervalDTO)
     {
         var interval = _mapper.Map<Interval>(intervalDTO);
