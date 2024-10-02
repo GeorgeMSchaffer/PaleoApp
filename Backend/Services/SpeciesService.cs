@@ -1,5 +1,6 @@
 namespace Backend.Services;
 using Shared.Models;
+using Shared.Models;
 public interface ISpeciesService
 {
     Task<IEnumerable<SpeciesDTO>> GetAll();

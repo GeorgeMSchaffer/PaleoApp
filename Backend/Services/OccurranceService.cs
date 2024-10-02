@@ -1,4 +1,4 @@
-using Backend.Data;
+using Shared.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,11 +29,11 @@ public class OccurrenceService : IOccurrenceService
     }); 
 
     //private ILogger logger;
-    public OccurrenceService(AppDBContext context,ILogger<OccurrenceService> logger,IMapper _mapper)
+    public OccurrenceService(AppDBContext context,ILogger<OccurrenceService> logger)
     {
         this._context = context;
         this._logger = (ILogger<OccurrenceService>?)logger;
-        this._mapper = _mapper;
+//        this._mapper = _mapper;
     }
 
     public  List<OccurrenceDTO> GetAll()

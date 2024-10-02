@@ -1,5 +1,6 @@
+using System.Reflection;
 using Shared.Models;
-using Backend.Data;
+using Shared.Data;
 using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IntervalService>();
 builder.Services.AddScoped<OccurrenceService>();
 builder.Services.AddScoped<SpeciesService>();

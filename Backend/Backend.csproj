@@ -32,12 +32,18 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="models\" />
       <Folder Include="Pages\" />
       <Folder Include="ServicesBak\" />
     </ItemGroup>
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="pages\Intervals.cshtml" />
+      <_ContentIncludedByDefault Remove="Data\carnian-occurrences.json" />
+      <_ContentIncludedByDefault Remove="Data\carnian-taxa.json" />
+      <_ContentIncludedByDefault Remove="Data\intervals.json" />
+      <_ContentIncludedByDefault Remove="Data\lopingan-occurrences.json" />
+      <_ContentIncludedByDefault Remove="Data\permian-occurrences.json" />
     </ItemGroup>
 
 </Project>

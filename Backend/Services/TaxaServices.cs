@@ -3,7 +3,7 @@ using Shared.Models;
 using Backend;
 using Microsoft.EntityFrameworkCore;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
-using Backend.Data;
+using Shared.Data;
 namespace Backend.Services;
 using Shared.Models;
 public interface ITaxaService

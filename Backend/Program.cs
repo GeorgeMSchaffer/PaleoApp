@@ -8,7 +8,7 @@ using Backend.Services;
 using AutoMapper;
 using Shared.Entities;
 using Backend.Services;
-using Backend.Data;
+using Shared.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

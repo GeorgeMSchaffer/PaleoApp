@@ -92,7 +92,7 @@ namespace Shared.Models
         
         [Column("reference_no")] public int? ReferenceNo { get; set; }
 
-        [Column("cc")] [StringLength(1024)] public string? Cc { get; set; }
+       // [Column("cc")] [StringLength(1024)] public string? Cc { get; set; }
 
         [Column("latlng_basis")]
         [StringLength(512)]

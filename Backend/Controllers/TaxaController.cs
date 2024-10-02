@@ -2,6 +2,7 @@ namespace Backend.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
 using Backend.Services;
+using Shared.Data;
 using Microsoft.EntityFrameworkCore;
 
 [Route("api/v1/[controller]s")]

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend;
 using Backend.Services;
 using Shared.Models;
+using Shared.Data;
 
 namespace Backend.Controllers
 {

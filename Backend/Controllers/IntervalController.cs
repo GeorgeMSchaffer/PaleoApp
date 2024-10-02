@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 using Backend.Services;
-using Backend.Data;
+using Shared.Data;
 namespace Backend.Controllers
 {
     [Route("api/v1/[controller]s")]

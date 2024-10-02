@@ -3,7 +3,7 @@ using AutoMapper;
 
 namespace Backend.Services;
 using Shared.Models;
-using Backend.Data;
+using Shared.Data;
 
 public interface IIntervalService
 {

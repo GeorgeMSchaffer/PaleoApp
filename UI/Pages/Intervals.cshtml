@@ -1,11 +1,11 @@
 @using NuGet.Protocol
 @using Interval = Backend.Models.IntervalListModel;
-@model Interval[]
+@model Interval
 
 @{
     ViewData["Title"] = "Intervals";
 }
-@if(Model.Length == 0)
+@if(Model.Intervals.Count == 0)
 {
     <p>No intervals found.</p>
 }
@@ -14,16 +14,22 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Start</th>
-                <th>End</th>
-                <th>Duration</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Interval Type</th>
+                <th>Min MYA</th>
+                <th>Max MYA</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var interval in Model)
+            @foreach (var interval in Model.Intervals)
             {
                 <tr>
-                    <td>@interval.ToJson()</td>
+                    <td>@interval.IntervalNo</td>
+                    <td>@interval.IntervalName.</td>
+                    <td>@interval.RecordType</td>
+                    <td>@interval.MinMya</td>
+                    <td>@interval.MaxMya</td>
                 </tr>
             }
         </tbody>

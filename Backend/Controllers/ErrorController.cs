@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 using Backend.Services;
-using Backend.Data;
+using Shared.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 
