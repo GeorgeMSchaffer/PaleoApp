@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 
-namespace Backend.Models;
+namespace Shared.Models;
 
 public partial class IntervalListModel : PageModel
 {

@@ -29,7 +29,7 @@ namespace Shared.Models
         public string? IntervalName { get; set; }
         // [ForeignKey("interval_name")]
  //       [ForeignKey("EarlyIntervalNo")]
-        public List<Occurrence> Occurrences { get; set; }
+        //public List<Occurrence> Occurrences { get; set; }
         
         [Column("min_ma")]
         [JsonPropertyName("min_ma")]

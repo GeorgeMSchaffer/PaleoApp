@@ -2,7 +2,7 @@ using Shared.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Models;
+namespace Shared.Models;
 
 public partial class OccurrenceListModel : PageModel
 {
@@ -13,10 +13,11 @@ public partial class OccurrenceListModel : PageModel
         _context = context;
     }
 
-    public List<Shared.Models.Occurrence> occurrence { get;set; }
+    public Occurrence Occurrence { get; set; }
+    public List<Shared.Models.Occurrence> Occurrences { get;set; }
 
     public async Task OnGetAsync()
     {
-        await _context.Intervals.ToListAsync();
+        await _context.Occurrences.ToListAsync();
     }
 }

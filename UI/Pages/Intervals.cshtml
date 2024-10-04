@@ -1,13 +1,14 @@
+@page
 @using NuGet.Protocol
-@using Interval = Backend.Models.IntervalListModel;
-@model Interval
+@using Intervals= Shared.Models.IntervalListModel;
+@model Intervals
 
 @{
     ViewData["Title"] = "Intervals";
 }
 @if(Model.Intervals.Count == 0)
 {
-    <p>No intervals found.</p>
+    <b>No intervals found.</b>
 }
 else
 {

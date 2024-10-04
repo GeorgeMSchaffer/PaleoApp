@@ -37,7 +37,7 @@ public class IntervalService : IIntervalService{
         }
         
         var occurrences = await _context.Occurrences
-                .Where<Occurrence>(o => o.EarlyIntervalName == intervals.First().IntervalName)
+                .Where<Occurrence>(o => o.EarlyInterval == intervals.First().IntervalName)
                 .ToListAsync();
         _logger.LogInformation($"Found {occurrences.Count()} occurrences for interval name {intervalName}");
         var occurrenceDTOs = _mapper.Map<List<OccurrenceDTO>>(occurrences);

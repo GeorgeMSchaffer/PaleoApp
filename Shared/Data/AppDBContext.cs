@@ -47,11 +47,11 @@ public class AppDBContext : DbContext
         //     .HasMany<Species>(navigationExpression: o => o.Species)
         //     .WithOne(navigationExpression: s => s.Occurrence);
         //    .HasForeignKey(foreignKeyExpression: s => s.AcceptedNo);
-
-        modelBuilder.Entity<Occurrence>()
-            .HasOne(o => o.Interval)
-            .WithMany(i => i.Occurrences)
-            .HasForeignKey(o => o.EarlyIntervalNo);
+        //
+        // modelBuilder.Entity<Occurrence>()
+        //     .HasOne(o => o.Interval)
+        //     .WithMany(i => i.Occurrences)
+        //     .HasForeignKey(o => o.EarlyIntervalNo);
 
        // modelBuilder.Entity<Occurrence>()
        //     .HasOne<Interval>(o => o.EarlyInterval);
