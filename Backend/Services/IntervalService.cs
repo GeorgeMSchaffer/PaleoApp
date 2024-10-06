@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using AutoMapper;
+using Shared.POJO;
 
 namespace Backend.Services;
 using Shared.Models;
@@ -7,10 +8,10 @@ using Shared.Data;
 
 public interface IIntervalService
 {
-    public Task<List<Interval>> GetIntervals();
+    public Task<List<Interval>> GetIntervals(Pagination pagination);
     public Task<IntervalDTO> findIntervalByID(int id);
     public void UpdateInterval(IntervalDTO intervalDTO);
-    public List<IntervalDTO> getIntervalsByType(String type);
+    public List<IntervalDTO> getIntervalsByType(String type, Pagination pagination);
 
 }
 public class IntervalService : IIntervalService{
@@ -24,10 +25,19 @@ public class IntervalService : IIntervalService{
         this._logger = logger;
     }
 
-    public async Task<List<OccurrenceDTO>> getOccurrencesByIntervalName(string intervalName)
+    //[TODO:] 
+    public List<IntervalDTO> getIntervalsByType(string intervalType, Pagination pagination)
+    {
+        var intervals = _context.Intervals.Where(i => i.RecordType == intervalType).Skip(pagination.skip).Take(pagination.limit).ToList();
+        var intervalDTOs = _mapper.Map<List<IntervalDTO>>(intervals);
+        return intervalDTOs;
+    }
+    public async Task<List<OccurrenceDTO>> getOccurrencesByIntervalName(string intervalName,Pagination pagination)
     {
         var intervals =  await _context.Intervals
             .Where<Interval>(i => i.IntervalName == intervalName)
+            .Take(pagination.limit)
+            .Skip(pagination.skip)
             .ToListAsync();
         // The interval name was not found so we need to bail out
        _logger.LogInformation($"Found {intervals.Count()} intervals with name {intervalName}");
@@ -43,9 +53,10 @@ public class IntervalService : IIntervalService{
         var occurrenceDTOs = _mapper.Map<List<OccurrenceDTO>>(occurrences);
         return occurrenceDTOs;
     }
-    public async Task<List<Interval>> GetIntervals()
+    public async Task<List<Interval>> GetIntervals(Pagination pagination)
     {
-        var intervals = await _context.Intervals.ToListAsync();
+
+       var intervals = await _context.Intervals.ToListAsync();
         if (intervals ==  null)
         {
             return new List<Interval>();

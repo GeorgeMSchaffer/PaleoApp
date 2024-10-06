@@ -8,10 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 using Backend.Services;
 using Shared.Data;
+using Shared.POJO;
+using Swagger
 namespace Backend.Controllers
 {
     [Route("api/v1/[controller]s")]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
     public class IntervalController : ControllerBase
     {
         //private readonly ILogger _logger;
@@ -27,24 +36,62 @@ namespace Backend.Controllers
            // _logger = logger;
         }
 
-        [HttpGet("/")]
-        public async Task<ActionResult<List<IntervalDTO>>> GetIntervals()
+        [HttpGet("/api/v1/intervals/")]
+        
+        public async Task<ActionResult<List<IntervalDTO>>> GetIntervals([FromQuery] int skip = 0, [FromQuery] int limit = 10, [FromQuery] string? sortBy = "interval_no", [FromQuery] string? sortDir = "ASC")
         {
-            var intervalDTOs =  _service.GetIntervals();
+            Pagination pagination = new Pagination()
+            {
+                limit = limit,
+                skip = skip,
+                sortBy = sortBy,
+                sortDir = sortDir
+            };
+            var intervalDTOs =  await _service.GetIntervals(pagination);
             if(intervalDTOs == null)
             {
                 return NotFound();
             }
-   
             return Ok(intervalDTOs);
         }
+      
 
         [HttpGet("/occurrences/{intervalName}/")]
         
-        //[TODO:] Need to join in the interval info into the occurrences returned
-        public async Task<List<OccurrenceDTO>> getIntervalOccurrences(String intervalName)
+//      / <summary>
+        /// Returns a list of fossil occurrences for a give interval name, ie. Carnian.
+        /// </summary>
+        /// <remarks>
+        /// Here is a sample remarks placeholder.
+        /// </remarks>
+        /// <param name="intervalName">The name of a geologic interval, for example 'carnian' or 'permian' etc...</param>
+        /// <param name="skip">The number of records to skip</param>
+        /// <params name="limit">The number of records to return</params>
+        /// <params name="sort">The field to sort by</params>
+        /// <param name="sortDir"> The sort direction, either ASC or DESC, results will use ASC if no sortDir param is specified </param>  
+        /// <returns>A list of fossil occurences</returns>
+        /// <remarks>
+        /// Sample Request
+        /// GET /api/v1/interval/occurrences/carnian?skip=0&limit=10&sort=species&sortDir=ASC
+        /// </remarks>
+        ///<response code="200">Returns a list of fossil occurrences.</response>
+        /// <response code="404">If the interval name is not found.</response>
+        /// <response code="400">If the interval name is not provided.</response>
+        /// <response code="500">If there is a server error/</response>
+        public async Task<List<OccurrenceDTO>> getIntervalOccurrences([FromQuery] string intervalName="",[FromQuery] int skip = 0, [FromQuery] int limit = 10, [FromQuery] string sort = "interval_no", [FromQuery] string sortDir = "ASC")
         {
-            var intervalDtos = await _service.getOccurrencesByIntervalName(intervalName);
+            if(intervalName == null || intervalName.Length == 0)
+            {
+                return new List<OccurrenceDTO>();
+            }
+            Pagination pagination = new Pagination()
+            {
+                limit = limit,
+                skip = skip,
+                sortBy = sort,
+                sortDir = sortDir
+            };
+            var intervalDtos = await _service.getOccurrencesByIntervalName(intervalName,pagination);
             
             // if(intervalDTO.Count == 0)
             // {
@@ -68,7 +115,7 @@ namespace Backend.Controllers
         // PUT: api/Interval/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInterval(int id, Interval interval)
+        async Task<IActionResult> PutInterval(int id, Interval interval)
         {
             if (id != interval.IntervalNo)
             {

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Backend;
 using Backend.Services;
 using Shared.Models;
+using Shared.POJO;
 using Shared.Data;
 
 namespace Backend.Controllers
@@ -25,11 +26,23 @@ namespace Backend.Controllers
 
         // GET: api/Occurrences
         [HttpGet]
-        public async Task<ActionResult<List<OccurrenceDTO>>> GetOccurrences()
+        public async Task<ActionResult<List<IntervalDTO>>> getOccurrences([FromQuery] int skip = 0, [FromQuery] int limit = 10, [FromQuery] string? sortBy = "interval_no", [FromQuery] string? sortDir = "ASC")
         {
-            var occurrences =  _occurrenceService.GetAll();
-            return occurrences;
+            Pagination pagination = new Pagination()
+            {
+                limit = limit,
+                skip = skip,
+                sortBy = sortBy,
+                sortDir = sortDir
+            };
+            var intervalDTOs = await _occurrenceService.GetAll(pagination);
+            if(intervalDTOs == null)
+            {
+                return Ok(new List<IntervalDTO>());
+            }
+            return Ok(intervalDTOs);
         }
+
 
         // GET: api/Occurrences/5
         [HttpGet("{id}")]

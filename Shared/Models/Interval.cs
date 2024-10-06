@@ -46,8 +46,8 @@ namespace Shared.Models
 
          [Column("parent_no")]
         public int? ParentNo { get; set; }
-        [ForeignKey("ParentNo")]
-        public Interval Parent { get; set; }
+        // [ForeignKey("ParentNo")]
+        // public Interval Parent { get; set; }
 
         [Column("record_type"), StringLength(255)]
         [JsonPropertyName("record_type")]

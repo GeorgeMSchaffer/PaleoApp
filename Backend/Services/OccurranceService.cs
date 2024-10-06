@@ -1,6 +1,7 @@
 using Shared.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Shared.POJO;
 
 namespace Backend.Services;
 using Shared.Models;
@@ -9,7 +10,7 @@ using Backend.Services;
 
 public interface IOccurrenceService
 {
-    List<OccurrenceDTO> GetAll();
+    Task<List<OccurrenceDTO>> GetAll(Pagination pagination);
     Task<OccurrenceDTO> Get(int id);
     Task<OccurrenceDTO> Add(OccurrenceDTO occurrence);
     Task<Occurrence?> Update(OccurrenceDTO occurrence);
@@ -36,10 +37,10 @@ public class OccurrenceService : IOccurrenceService
 //        this._mapper = _mapper;
     }
 
-    public  List<OccurrenceDTO> GetAll()
+    public  async Task<List<OccurrenceDTO>> GetAll(Pagination pagination)
     {
-            var occurrences =  _context.Occurrences.ToList();
-            _logger.LogInformation("Returning Occurrence  " + occurrences.Count + " occurrences");
+        var occurrences = await _context.Occurrences.Skip(pagination.skip).Take(pagination.limit).ToListAsync();
+        _logger.LogInformation("Returning Occurrence  " + occurrences.Count + " occurrences");
         //logger.LogInformation("Returning Occurrence with ID " + occurrences. + " occurrences");
         var mapper = new Mapper(config);
         
